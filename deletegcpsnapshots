@@ -1,0 +1,8 @@
+$snapshots = gcloud compute snapshots list --format=json | ConvertFrom-Json 
+
+$date = Get-Date
+foreach ($snapshot in $snapshots ) {
+    if ([datetime]$snapshot.creationtimestamp -lt $date.AddDays(-30)) {
+        gcloud compute snapshots delete $snapshot.name --quiet
+    }
+}
